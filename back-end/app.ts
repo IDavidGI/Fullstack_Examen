@@ -8,6 +8,7 @@ import { expressjwt } from 'express-jwt';
 import { userRouter } from './controller/user.routes';
 import helmet from 'helmet';
 import { teacherRouter } from './controller/teacher.routes';
+import { classroomRouter } from './controller/classroom.routes';
 
 const app = express();
 app.use(helmet());
@@ -32,12 +33,14 @@ app.use(
             '/teachers',
             /^\/teachers\/.*/,
             '/users',
+            // '/classrooms',
         ],
     })
 );
 
 app.use('/teachers', teacherRouter);
 app.use('/users', userRouter);
+app.use('/classrooms', classroomRouter);
 
 app.get('/status', (req, res) => {
     res.json({ message: 'Exam API is running...' });
@@ -50,6 +53,15 @@ const swaggerOpts = {
             title: 'Exam API',
             version: '1.0.0',
         },
+        components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    },
     },
     apis: ['./controller/*.routes.ts'],
 };
